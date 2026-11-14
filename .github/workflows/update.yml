@@ -1,0 +1,36 @@
+name: Update Eitri formula
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/**
+      - .github/workflows/update.yml
+permissions:
+  contents: write
+concurrency:
+  group: update-eitri
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - run: python -m unittest discover -s scripts
+      - run: python scripts/update.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - run: ruby -c Formula/eitri.rb
+      - name: Commit formula update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Formula/eitri.rb
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update Eitri formula from latest release'
+            git push
+          fi
