@@ -2,16 +2,33 @@
 class Eitri < Formula
   desc "Competitive programming companion for the terminal"
   homepage "https://eitri.veryshyjelly.in"
-  version "1.1.0"
+  version "1.1.1"
   license "GPL-2.0-only"
 
-  url "https://github.com/veryshyjelly/eitri/releases/download/v1.1.0/eitri_1.1.0_source.tar.gz"
-  sha256 "23fd2bc14e46ba42573c6262929d9c82a28a7f512fc8cc5b053c87b62dca9720"
+  on_macos do
+    on_arm do
+      url "https://github.com/veryshyjelly/eitri/releases/download/v1.1.1/eitri_1.1.1_darwin_arm64.tar.gz"
+      sha256 "2ce9c8b6270e2f3c789a97b56860166456f1a3f227a5b022aeeafb2fee0211c6"
+    end
+    on_intel do
+      url "https://github.com/veryshyjelly/eitri/releases/download/v1.1.1/eitri_1.1.1_darwin_amd64.tar.gz"
+      sha256 "fe01146f4e68fba4e336d4fd4806fbab34ca77b8c2c420dc849a26c69f04ae15"
+    end
+  end
 
-  depends_on "go" => :build
+  on_linux do
+    on_arm do
+      url "https://github.com/veryshyjelly/eitri/releases/download/v1.1.1/eitri_1.1.1_linux_arm64.tar.gz"
+      sha256 "f1325391e813b6c9040782eec92b0afc2376df2472f7db778ab03a14f3a003bf"
+    end
+    on_intel do
+      url "https://github.com/veryshyjelly/eitri/releases/download/v1.1.1/eitri_1.1.1_linux_amd64.tar.gz"
+      sha256 "85289aa22fde7853b6e0502aacb93e7d683c69803302967f8234638d5563687f"
+    end
+  end
 
   def install
-    system "go", "build", *std_go_args(ldflags: "-s -w -X main.version=#{version}"), "."
+    bin.install "eitri"
   end
 
   test do
