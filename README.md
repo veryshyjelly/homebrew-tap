@@ -33,9 +33,8 @@ and Gatekeeper protections.
 
 ## CraftCoders
 
-CraftCoders Homebrew support is prepared for the first verified public release.
-No formula is checked in until genuine release archives are available. After
-that release and the next hourly or manual update, install with:
+CraftCoders is available from the verified [v0.1.0 release](https://github.com/veryshyjelly/craftcoders-cli/releases/tag/v0.1.0).
+Install the prebuilt CLI with:
 
 ```sh
 brew install veryshyjelly/tap/craftcoders
