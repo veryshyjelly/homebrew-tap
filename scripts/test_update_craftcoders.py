@@ -42,10 +42,12 @@ class CraftcodersTest(unittest.TestCase):
             self.assertIn(f'https://github.com/{updater.REPO}/releases/download/v1.2.3/{name}', formula)
             self.assertIn(digest, formula)
         for text in ('class Craftcoders < Formula', 'on_macos do', 'on_linux do', 'on_arm do', 'on_intel do',
-                     'version "1.2.3"', 'license "MIT"', 'bin.install "craftcoders"',
+                     'license "MIT"', 'bin.install "craftcoders"',
                      'assert_equal "craftcoders #{version}\\n", shell_output("#{bin}/craftcoders --version")'):
             self.assertIn(text, formula)
         self.assertNotIn("depends_on", formula)
+        self.assertNotRegex(formula, r'(?m)^\s*version "')
+
 
     def test_unstable_unsafe_tags_preserve_formula(self):
         for tag in ("1.2.3", "v01.2.3", "v1.02.3", "v1.2.03", "v1.2.3-rc1", "v1.2.3+meta", "v1/2/3", "v1.2.3\n", None):

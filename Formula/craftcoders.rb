@@ -1,7 +1,6 @@
 class Craftcoders < Formula
   desc "Local CLI for CodeCrafters challenges"
   homepage "https://github.com/veryshyjelly/craftcoders-cli"
-  version "0.1.0"
   license "MIT"
 
   on_macos do

@@ -59,7 +59,6 @@ def render(tag, checksums):
     return f'''class Craftcoders < Formula
   desc "Local CLI for CodeCrafters challenges"
   homepage "https://github.com/{REPO}"
-  version "{tag[1:]}"
   license "MIT"
 
 {(chr(10) * 2).join(platforms)}
