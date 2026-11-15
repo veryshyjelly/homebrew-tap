@@ -4,9 +4,9 @@
 cask "vocabulary-studio" do
   arch arm: "arm64", intel: "amd64"
 
-  version "1.0.0"
-  sha256 arm:   "3dcbff64f76e2330831a2de65eacb92cdabef0ba414b1270ceec13cdf29cb0d1",
-         intel: "e2ab5d5dd94a7620de7b0b5cc559cb40aebbf621af52597748c08989580ea6ab"
+  version "1.0.1"
+  sha256 arm:   "081c40a16526700d7c472ada189db930fc5c43d60c3749512c6699a5c5120e47",
+         intel: "a28180d38335eccd377aa4c25f6961f13532e39211bf23055a301d9787c31db1"
 
   url "https://github.com/veryshyjelly/vocabulary-studio/releases/download/v#{version}/vocabulary-studio_#{version}_darwin_#{arch}.zip"
   name "Vocabulary Studio"
