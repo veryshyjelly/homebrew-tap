@@ -35,7 +35,7 @@ class VocabularyStudioTest(unittest.TestCase):
         self.assertIn('arch arm: "arm64", intel: "amd64"', cask)
         self.assertIn('/v#{version}/vocabulary-studio_#{version}_darwin_#{arch}.zip', cask)
         self.assertIn('app "Vocabulary Studio.app"', cask)
-        self.assertIn('depends_on macos: ">= :ventura"', cask)
+        self.assertIn('depends_on macos: :ventura', cask)
 
     def test_unstable_or_unsafe_tags_rejected(self):
         for tag in ("1.0.0", "v1.0.0-rc1", "v01.0.0", 'v1.0.0"', "v1/0/0"):

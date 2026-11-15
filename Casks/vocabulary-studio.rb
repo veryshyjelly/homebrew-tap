@@ -13,7 +13,7 @@ cask "vocabulary-studio" do
   desc "Desktop learning companion for Vocabulary.com"
   homepage "https://github.com/veryshyjelly/vocabulary-studio"
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "Vocabulary Studio.app"
 

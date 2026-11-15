@@ -9,8 +9,8 @@ brew install --cask veryshyjelly/tap/vocabulary-studio
 
 Vocabulary Studio installs a prebuilt macOS app into Applications, selecting the
 Apple Silicon or Intel download for your Mac. It requires macOS 13 or later.
-Its cask becomes available after the first app release is published and the
-updater runs. No Go, Bun, or Wails installation is required to use the app.
+No Go, Bun, or Wails installation is required to use the app. On Homebrew 7 and
+newer, the fully qualified install command grants trust to this cask only.
 
 ```sh
 brew update
@@ -56,5 +56,6 @@ After generating the cask:
 ```sh
 brew style ./Casks/vocabulary-studio.rb
 brew tap veryshyjelly/tap
+brew trust --cask veryshyjelly/tap/vocabulary-studio
 brew audit --cask --online veryshyjelly/tap/vocabulary-studio
 ```
