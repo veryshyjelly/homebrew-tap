@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 import tempfile
 import urllib.request
@@ -122,7 +123,8 @@ def update(target=None):
             if actual != checksums[name]:
                 raise ValueError("checksum mismatch: " + name)
     target = Path(target) if target is not None else Path(__file__).resolve().parent.parent / "Formula/craftcoders.rb"
-    if target.exists() and target.read_text() == formula:
+    if (target.exists() and target.read_text() == formula
+            and stat.S_IMODE(target.stat().st_mode) == 0o644):
         return
     target.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
@@ -132,6 +134,7 @@ def update(target=None):
             temporary = Path(output.name)
             output.write(formula)
             output.flush()
+        temporary.chmod(0o644)
         os.replace(temporary, target)
     finally:
         if temporary is not None:

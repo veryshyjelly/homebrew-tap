@@ -1,5 +1,6 @@
 import hashlib
 import io
+import stat
 import json
 from pathlib import Path
 import subprocess
@@ -112,6 +113,43 @@ class CraftcodersTest(unittest.TestCase):
             with patch.object(updater.os, "replace", side_effect=AssertionError("identical rewrite")):
                 self.attempt(target)
             self.assertEqual(target.stat().st_mtime_ns, before)
+
+    def test_new_and_replacement_formula_are_readable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "craftcoders.rb"
+            self.attempt(target)
+            self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o644)
+            target.write_text("previous formula")
+            target.chmod(0o600)
+            self.attempt(target)
+            self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o644)
+            self.assertEqual(target.read_text(), updater.render("v1.2.3", self.hashes))
+
+    def test_identical_formula_with_restricted_permissions_is_repaired(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "craftcoders.rb"
+            formula = updater.render("v1.2.3", self.hashes)
+            target.write_text(formula)
+            target.chmod(0o600)
+            self.attempt(target)
+            self.assertEqual(target.read_text(), formula)
+            self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o644)
+
+    def test_identical_formula_chmod_failure_preserves_bytes_and_mode(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "craftcoders.rb"
+            formula = updater.render("v1.2.3", self.hashes)
+            target.write_text(formula)
+            target.chmod(0o600)
+            with patch.object(updater.Path, "chmod", side_effect=OSError("chmod failed")), self.assertRaises(OSError):
+                self.attempt(target)
+            self.assertEqual(target.read_text(), formula)
+            self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o600)
+            self.assertEqual(list(Path(directory).iterdir()), [target])
+
+    def test_chmod_failure_preserves_formula_and_cleans_temporary(self):
+        with patch.object(updater.Path, "chmod", side_effect=OSError("chmod failed")):
+            self.preserve()
 
     def test_atomic_replace_failure_preserves_formula_and_cleans_temporary(self):
         with patch.object(updater.os, "replace", side_effect=OSError("replace failed")):
