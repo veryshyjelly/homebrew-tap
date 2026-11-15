@@ -1,4 +1,5 @@
-name: Update Eitri formula
+name: Update Homebrew packages
+
 on:
   schedule:
     - cron: '23 * * * *'
@@ -7,11 +8,14 @@ on:
     paths:
       - scripts/**
       - .github/workflows/update.yml
+
 permissions:
   contents: write
+
 concurrency:
-  group: update-eitri
+  group: update-homebrew-packages
   cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -21,16 +25,27 @@ jobs:
         with:
           python-version: '3.x'
       - run: python -m unittest discover -s scripts
-      - run: python scripts/update.py
+      - name: Update formulae and casks from verified releases
+        run: |
+          python scripts/update.py
+          python scripts/update_vocabulary_studio.py
         env:
           GH_TOKEN: ${{ github.token }}
-      - run: ruby -c Formula/eitri.rb
-      - name: Commit formula update
+      - name: Check Ruby syntax
+        run: |
+          ruby -c Formula/eitri.rb
+          if test -f Casks/vocabulary-studio.rb; then
+            ruby -c Casks/vocabulary-studio.rb
+          fi
+      - name: Commit package updates
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add Formula/eitri.rb
+          if test -f Casks/vocabulary-studio.rb; then
+            git add Casks/vocabulary-studio.rb
+          fi
           if ! git diff --cached --quiet; then
-            git commit -m 'Update Eitri formula from latest release'
+            git commit -m 'Update Homebrew packages from latest releases'
             git push
           fi
