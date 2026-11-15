@@ -29,11 +29,15 @@ jobs:
         run: |
           python scripts/update.py
           python scripts/update_vocabulary_studio.py
+          python scripts/update_craftcoders.py
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Check Ruby syntax
         run: |
           ruby -c Formula/eitri.rb
+          if test -f Formula/craftcoders.rb; then
+            ruby -c Formula/craftcoders.rb
+          fi
           if test -f Casks/vocabulary-studio.rb; then
             ruby -c Casks/vocabulary-studio.rb
           fi
@@ -42,6 +46,9 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add Formula/eitri.rb
+          if test -f Formula/craftcoders.rb; then
+            git add Formula/craftcoders.rb
+          fi
           if test -f Casks/vocabulary-studio.rb; then
             git add Casks/vocabulary-studio.rb
           fi
